@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { usersCollection } from '../../mongo/collections';
 import { getObjectId } from '../../utils';
-import { defaultDeposit } from '../../users/constants';
+import { defaultDeposit } from '../../constants';
 
 const resetDeposit = async (request: Request, response: Response): Promise<void> => {
   try {

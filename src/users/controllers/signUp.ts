@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import { usersCollection } from '../../mongo/collections';
-import { defaultDeposit, passwordValidationSchema, usernameValidationSchema } from '../constants';
-import { JWTPayload } from '../../types';
+import { passwordValidationSchema, usernameValidationSchema } from '../constants';
+import { JWTPayload, Role } from '../../types';
 import { generateTokens } from '../functions';
+import { defaultDeposit } from '../../constants';
 
 const signUp = async (request: Request, response: Response): Promise<void> => {
   try {
@@ -23,6 +24,7 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
 
     const { username, password, role } = request.body;
     const userDocument = await usersCollection.findOne({ username });
+    const isBuyer = role === Role.BUYER;
 
     if (userDocument) {
       response.status(409).send('User already exists');
@@ -30,13 +32,17 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const documentInsertOneResult = await usersCollection.insertOne({
+    const document: Record<any, any> = {
       username,
       password: hashedPassword,
-      deposit: defaultDeposit,
       role,
-    });
+    };
 
+    if (isBuyer) {
+      document.deposit = defaultDeposit;
+    }
+
+    const documentInsertOneResult = await usersCollection.insertOne(document);
     const documentId = documentInsertOneResult.insertedId;
     const jwtPayload: JWTPayload = {
       username,
