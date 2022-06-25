@@ -28,6 +28,11 @@ const buyProduct = async (request: Request, response: Response): Promise<void> =
       return;
     }
 
+    if (product.amount_available < quantity) {
+      response.sendStatus(422);
+      return;
+    }
+
     const userId = request.user_id;
     const findUserFilter = { _id: getObjectId(userId) };
     const userDocument = (await usersCollection.findOne(findUserFilter, { projection: { deposit: 1 } })) as unknown as User;

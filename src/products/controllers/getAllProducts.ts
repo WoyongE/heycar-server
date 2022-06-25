@@ -1,9 +1,17 @@
 import { Request, Response } from 'express';
 import { productsCollection } from '../../mongo/collections';
+import { Role } from '../../types';
 
 const getAllProducts = async (request: Request, response: Response): Promise<void> => {
   try {
-    const findCursor = productsCollection.find({}, { projection: { seller_id: 0 } });
+    const isBuyer = request.role === Role.BUYER;
+    const projection: Record<string, number> = {};
+
+    if (isBuyer) {
+      projection.amount_available = 0;
+    }
+
+    const findCursor = productsCollection.find({}, { projection });
     const documents = await findCursor.toArray();
 
     response.json(documents);
