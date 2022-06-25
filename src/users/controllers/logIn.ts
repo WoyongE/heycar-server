@@ -21,10 +21,7 @@ const logIn = async (request: Request, response: Response): Promise<void> => {
     }
 
     const { username, password } = request.body;
-    const userDocument = (await usersCollection.findOne(
-      { username },
-      { projection: { access_token: 0, refresh_token: 0 } }
-    )) as unknown as User | null;
+    const userDocument = (await usersCollection.findOne({ username })) as unknown as User | null;
 
     if (!userDocument) {
       response.sendStatus(404);
@@ -38,19 +35,24 @@ const logIn = async (request: Request, response: Response): Promise<void> => {
       return;
     }
 
-    const responseObject: Partial<User> = userDocument;
-
-    delete responseObject.password;
-    delete responseObject.refresh_token;
-
     const jwtPayload = {
       username: userDocument.username,
       _id: userDocument._id,
     };
 
-    const { accessToken, refreshToken } = await generateTokens(jwtPayload);
+    const { access_token, refresh_token } = await generateTokens(jwtPayload);
+    const responseObject = {
+      user: {
+        role: userDocument.role,
+        username: userDocument.username,
+        deposit: userDocument.deposit,
+      },
+      access_token,
+      refresh_token,
+      number_of_other_sessions: userDocument.tokens.length - 1 || 1,
+    };
 
-    response.json({ user: responseObject, accessToken, refreshToken });
+    response.json(responseObject);
   } catch (e) {
     console.log(e);
     response.sendStatus(500);

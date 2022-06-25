@@ -39,7 +39,7 @@ describe('Buy', () => {
         .post('/users/signup')
         .send(seller)
         .end((err, res) => {
-          sellerToken = res.body.accessToken;
+          sellerToken = res.body.access_token;
 
           chai
             .request(basePath)
@@ -54,7 +54,7 @@ describe('Buy', () => {
                 .post('/users/signup')
                 .send(buyer)
                 .end((err2, res2) => {
-                  buyerToken = res2.body.accessToken;
+                  buyerToken = res2.body.access_token;
 
                   const deposit: Deposit = { 100: 1, 50: 0, 20: 0, 10: 0, 5: 0 };
 

@@ -31,9 +31,9 @@ const getToken = async (request: Request, response: Response): Promise<void> => 
     try {
       const user = (await jwt.verify(token, refreshTokenSecret)) as JWTPayload;
       const jwtPayload = { username: user.username, _id: user._id };
-      const { accessToken, refreshToken } = await generateTokens(jwtPayload);
+      const { access_token, refresh_token } = await generateTokens(jwtPayload);
 
-      response.json({ accessToken, refreshToken });
+      response.json({ access_token, refresh_token });
     } catch (e) {
       response.sendStatus(403);
       return;

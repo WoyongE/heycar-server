@@ -16,9 +16,9 @@ export type Deposit = {
 export interface User extends OptionalId<any> {
   username: string;
   password: string;
-  refresh_token: string;
   role: Role;
   deposit: Deposit;
+  tokens: { access: string; refresh: string }[];
 }
 
 export interface Product extends OptionalId<any> {

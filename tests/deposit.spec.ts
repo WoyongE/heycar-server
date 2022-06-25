@@ -21,7 +21,7 @@ describe('Deposit', () => {
         .post('/users/signup')
         .send(testUser)
         .end((err, res) => {
-          token = res.body.accessToken;
+          token = res.body.access_token;
           done();
         });
     });

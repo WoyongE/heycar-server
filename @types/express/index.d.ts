@@ -7,6 +7,8 @@ declare global {
     interface Request {
       role: User['role'];
       user_id: User['_id'];
+      user: User;
+      token: string;
     }
   }
 }

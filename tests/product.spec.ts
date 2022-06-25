@@ -22,7 +22,7 @@ describe('Product', () => {
         .post('/users/signup')
         .send(testUser)
         .end((err, res) => {
-          token = res.body.accessToken;
+          token = res.body.access_token;
           userId = res.body.user._id;
           done();
         });

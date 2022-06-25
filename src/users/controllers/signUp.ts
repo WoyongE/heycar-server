@@ -49,9 +49,17 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
       _id: documentId.toString(),
     };
 
-    const { accessToken, refreshToken } = await generateTokens(jwtPayload);
+    const { access_token, refresh_token } = await generateTokens(jwtPayload);
+    const responseObject = {
+      user: {
+        username,
+        _id: documentId,
+      },
+      access_token,
+      refresh_token,
+    };
 
-    response.json({ user: { username, _id: documentId }, accessToken, refreshToken });
+    response.json(responseObject);
   } catch (e) {
     console.log(e);
     response.sendStatus(500);
