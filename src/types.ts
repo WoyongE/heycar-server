@@ -23,7 +23,7 @@ export interface User extends OptionalId<any> {
 
 export interface Product extends OptionalId<any> {
   cost: number;
-  name: number;
+  name: string;
   seller_id: ObjectId;
   amount_available: number;
   slug: string;

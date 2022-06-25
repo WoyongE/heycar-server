@@ -8,7 +8,7 @@ const deleteProduct = async (request: Request, response: Response): Promise<void
     const filter = { _id: getObjectId(productId) };
     await productsCollection.deleteOne(filter);
 
-    response.status(204).send('Product deleted');
+    response.sendStatus(204);
   } catch (e) {
     console.log(e);
     response.sendStatus(500);

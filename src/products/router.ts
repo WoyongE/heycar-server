@@ -14,7 +14,7 @@ const productsRouter = express.Router();
 productsRouter.get('/', verifyToken, getAllProducts);
 productsRouter.post('/', verifyToken, verifyRole(Role.SELLER), addProduct);
 productsRouter.get('/:id', verifyToken, getProduct);
-productsRouter.delete('/:id', verifyToken, verifyRole(Role.SELLER), verifySeller, deleteProduct);
 productsRouter.put('/:id', verifyToken, verifyRole(Role.SELLER), verifySeller, updateProduct);
+productsRouter.delete('/:id', verifyToken, verifyRole(Role.SELLER), verifySeller, deleteProduct);
 
 export default productsRouter;

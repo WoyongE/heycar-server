@@ -6,13 +6,15 @@ import { calculateTotalBalance } from '../functions';
 
 const deposit = async (request: Request, response: Response): Promise<void> => {
   try {
-    const schema = Joi.object().keys({
-      5: Joi.number(),
-      10: Joi.number(),
-      20: Joi.number(),
-      50: Joi.number(),
-      100: Joi.number(),
-    });
+    const schema = Joi.object()
+      .keys({
+        5: Joi.number().integer().min(0),
+        10: Joi.number().integer().min(0),
+        20: Joi.number().integer().min(0),
+        50: Joi.number().integer().min(0),
+        100: Joi.number().integer().min(0),
+      })
+      .min(1);
 
     const result = schema.validate(request.body, { abortEarly: false });
 

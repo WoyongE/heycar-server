@@ -8,8 +8,8 @@ import { Deposit, OrderResponse, Product, User } from '../../types';
 const buyProduct = async (request: Request, response: Response): Promise<void> => {
   try {
     const schema = Joi.object().keys({
-      product_id: Joi.string().required(),
-      quantity: Joi.number().min(1).required(),
+      product_id: Joi.string().length(24).required(),
+      quantity: Joi.number().integer().min(1).required(),
     });
 
     const result = schema.validate(request.body, { abortEarly: false });
@@ -20,8 +20,8 @@ const buyProduct = async (request: Request, response: Response): Promise<void> =
     }
 
     const { product_id, quantity } = request.body;
-    const productQuery = { _id: getObjectId(product_id) };
-    const product = (await productsCollection.findOne(productQuery)) as unknown as Product | null;
+    const findProductFilter = { _id: getObjectId(product_id) };
+    const product = (await productsCollection.findOne(findProductFilter)) as unknown as Product | null;
 
     if (!product) {
       response.status(404).send('Product not found');
@@ -29,8 +29,8 @@ const buyProduct = async (request: Request, response: Response): Promise<void> =
     }
 
     const userId = request.user_id;
-    const findUserQuery = { _id: getObjectId(userId) };
-    const userDocument = (await usersCollection.findOne(findUserQuery, { projection: { deposit: 1 } })) as unknown as User;
+    const findUserFilter = { _id: getObjectId(userId) };
+    const userDocument = (await usersCollection.findOne(findUserFilter, { projection: { deposit: 1 } })) as unknown as User;
     const userTotalBalance = calculateTotalBalance(userDocument.deposit);
     const orderTotal = product.cost * quantity;
 
@@ -71,11 +71,11 @@ const buyProduct = async (request: Request, response: Response): Promise<void> =
         cost: product.cost,
         name: product.name,
         slug: product.slug,
-        amount_available: product.amount_available,
       },
     };
 
-    await usersCollection.updateOne(findUserQuery, { $set: { deposit: balanceDenominations } });
+    await usersCollection.updateOne(findUserFilter, { $set: { deposit: balanceDenominations } });
+    await productsCollection.updateOne(findProductFilter, { $set: { amount_available: product.amount_available - quantity } });
 
     response.json(responseAsJSON);
   } catch (e) {

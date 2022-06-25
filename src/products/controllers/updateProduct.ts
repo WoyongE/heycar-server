@@ -7,11 +7,13 @@ const updateProduct = async (request: Request, response: Response): Promise<void
   try {
     const productId = request.params.id;
     const filter = { _id: getObjectId(productId) };
-    const schema = Joi.object().keys({
-      cost: Joi.number(),
-      amount_available: Joi.number(),
-      name: Joi.string(),
-    });
+    const schema = Joi.object()
+      .keys({
+        cost: Joi.number(),
+        amount_available: Joi.number(),
+        name: Joi.string(),
+      })
+      .min(1);
 
     const result = schema.validate(request.body, { abortEarly: false });
 
@@ -21,8 +23,9 @@ const updateProduct = async (request: Request, response: Response): Promise<void
     }
 
     await productsCollection.updateOne(filter, { $set: request.body });
+    const product = await productsCollection.findOne(filter);
 
-    response.sendStatus(200);
+    response.json(product);
   } catch (e) {
     console.log(e);
     response.sendStatus(500);

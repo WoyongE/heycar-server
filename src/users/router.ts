@@ -7,13 +7,13 @@ import deleteUser from './controllers/deleteUser';
 import updateUser from './controllers/updateUser';
 import getUser from './controllers/getUser';
 
-const router = express.Router();
+const usersRouter = express.Router();
 
-router.post('/signup', signUp);
-router.post('/login', logIn);
-router.get('/token', getToken);
-router.get('/', verifyToken, getUser);
-router.put('/', verifyToken, updateUser);
-router.delete('/', verifyToken, deleteUser);
+usersRouter.post('/signup', signUp);
+usersRouter.post('/login', logIn);
+usersRouter.get('/token', getToken);
+usersRouter.get('/', verifyToken, getUser);
+usersRouter.put('/', verifyToken, updateUser);
+usersRouter.delete('/', verifyToken, deleteUser);
 
-export default router;
+export default usersRouter;

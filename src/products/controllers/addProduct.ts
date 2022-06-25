@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import Joi from 'joi';
-import slugify from 'slugify';
-import { productsCollection } from '../../mongo/collections';
-import { getObjectId } from '../../utils';
 import { Product } from '../../types';
 import { validateCost } from '../functions';
+import { insertProduct } from '../service';
 
 const addProduct = async (request: Request, response: Response): Promise<void> => {
   try {
@@ -21,23 +19,9 @@ const addProduct = async (request: Request, response: Response): Promise<void> =
       return;
     }
 
-    const { cost, name, amount_available } = request.body;
-    const slug = slugify(name, { lower: true });
-    const existingSlugsCursor = productsCollection.find({ slug: { $regex: slug } });
-    const existingSlugsDocuments = await existingSlugsCursor.toArray();
-    const numberOfExistingSlugs = existingSlugsDocuments.length;
-    const transformedSlug = numberOfExistingSlugs ? `${slug}-${numberOfExistingSlugs}` : slug;
-    const product: Product = {
-      cost,
-      name,
-      seller_id: getObjectId(request.user_id),
-      amount_available,
-      slug: transformedSlug,
-    };
+    const product = await insertProduct(request.body as Product, request.user_id);
 
-    const insertResult = await productsCollection.insertOne(product);
-
-    response.json({ id: insertResult.insertedId });
+    response.json(product);
   } catch (e) {
     console.log(e);
     response.sendStatus(500);
