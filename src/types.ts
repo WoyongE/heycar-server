@@ -1,4 +1,4 @@
-import { ObjectId, OptionalId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 export enum Role {
   BUYER = 'buyer',
@@ -13,7 +13,8 @@ export type Deposit = {
   100: number;
 };
 
-export interface User extends OptionalId<any> {
+export interface User {
+  _id: string;
   username: string;
   password: string;
   role: Role;
@@ -21,7 +22,8 @@ export interface User extends OptionalId<any> {
   tokens: { access: string; refresh: string }[];
 }
 
-export interface Product extends OptionalId<any> {
+export interface Product {
+  _id: string;
   cost: number;
   name: string;
   seller_id: ObjectId;
@@ -35,6 +37,13 @@ export type OrderResponse = {
   quantity: number;
   balance_denominations: Deposit;
   balance: number;
+};
+
+export type LoginResponse = {
+  user: Partial<User>;
+  access_token: string;
+  refresh_token: string;
+  other_sessions: number;
 };
 
 export type JWTPayload = {

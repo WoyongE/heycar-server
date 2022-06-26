@@ -10,7 +10,7 @@ const insertProduct = async (product: Product, sellerId: string): Promise<Produc
   const existingSlugsDocuments = await existingSlugsCursor.toArray();
   const numberOfExistingSlugs = existingSlugsDocuments.length;
   const transformedSlug = numberOfExistingSlugs ? `${slug}-${numberOfExistingSlugs}` : slug;
-  const transformedProduct: Product = {
+  const transformedProduct = {
     cost,
     name,
     seller_id: getObjectId(sellerId),

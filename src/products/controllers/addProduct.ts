@@ -19,7 +19,7 @@ const addProduct = async (request: Request, response: Response): Promise<void> =
       return;
     }
 
-    const product = await insertProduct(request.body as Product, request.user_id);
+    const product = await insertProduct(request.body as Product, request.user._id);
 
     response.json(product);
   } catch (e) {

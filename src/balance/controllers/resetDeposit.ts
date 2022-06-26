@@ -5,7 +5,7 @@ import { defaultDeposit } from '../../constants';
 
 const resetDeposit = async (request: Request, response: Response): Promise<void> => {
   try {
-    const id = request.user_id;
+    const id = request.user._id;
     await usersCollection.updateOne({ _id: getObjectId(id) }, { $set: { deposit: defaultDeposit } });
 
     response.sendStatus(200);

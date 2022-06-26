@@ -3,18 +3,13 @@ import { Role } from './types';
 
 const verifyRole =
   (role: Role) =>
-  async (request: Request, response: Response, next: NextFunction): Promise<void> => {
-    try {
-      if (role !== request.role) {
-        response.sendStatus(403);
-        return;
-      }
-
-      next();
-    } catch (e) {
-      console.log(e);
-      response.sendStatus(500);
+  (request: Request, response: Response, next: NextFunction): void => {
+    if (role !== request.user.role) {
+      response.sendStatus(403);
+      return;
     }
+
+    next();
   };
 
 export default verifyRole;

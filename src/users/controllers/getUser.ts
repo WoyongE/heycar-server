@@ -1,21 +1,26 @@
 import { Request, Response } from 'express';
 import { usersCollection } from '../../mongo/collections';
 import { getObjectId } from '../../utils';
-import { calculateTotalBalance } from '../../balance/functions';
 import { User } from '../../types';
+import { calculateTotalBalance } from '../../balance/functions';
 
 const getUser = async (request: Request, response: Response): Promise<void> => {
   try {
-    const id = request.user_id;
+    const id = request.user._id;
     const document = (await usersCollection.findOne(
       { _id: getObjectId(id) },
-      { projection: { access_token: 0, refresh_token: 0, password: 0 } }
+      { projection: { tokens: 0, password: 0 } }
     )) as unknown as User;
 
-    response.json({
+    const responseJSON: Record<string, any> = {
       ...document,
-      balance: calculateTotalBalance(document.deposit),
-    });
+    };
+
+    if (request.isBuyer) {
+      responseJSON.balance = calculateTotalBalance(document.deposit);
+    }
+
+    response.json(responseJSON);
   } catch (e) {
     console.log(e);
     response.sendStatus(500);

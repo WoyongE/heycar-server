@@ -4,7 +4,7 @@ import { getObjectId } from '../../utils';
 
 const logout = async (request: Request, response: Response): Promise<void> => {
   try {
-    const id = request.user_id;
+    const id = request.user._id;
 
     await usersCollection.updateOne(
       { _id: getObjectId(id) },

@@ -15,8 +15,8 @@ import buyProduct from './buyer/controllers/buyProduct';
 const app = express();
 const morganFormat = isDev ? 'dev' : 'combined';
 
-app.use(express.json());
 app.use(helmet());
+app.use(express.json());
 app.use(morgan(morganFormat));
 
 app.use('/users', usersRouter);

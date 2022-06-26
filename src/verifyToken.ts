@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { accessTokenSecret } from './constants';
-import { JWTPayload, User } from './types';
+import { JWTPayload, Role, User } from './types';
 import { usersCollection } from './mongo/collections';
 import { getObjectId } from './utils';
 
@@ -31,10 +31,11 @@ const verifyToken = async (request: Request, response: Response, next: NextFunct
         return;
       }
 
-      request.user_id = userId;
-      request.role = user.role;
       request.token = token;
+      request.isBuyer = user.role === Role.BUYER;
+      request.isSeller = user.role === Role.SELLER;
       request.user = user;
+
       next();
     } catch (e) {
       console.log(e);

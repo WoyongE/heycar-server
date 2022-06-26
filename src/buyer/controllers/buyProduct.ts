@@ -33,7 +33,7 @@ const buyProduct = async (request: Request, response: Response): Promise<void> =
       return;
     }
 
-    const userId = request.user_id;
+    const userId = request.user._id;
     const findUserFilter = { _id: getObjectId(userId) };
     const userDocument = (await usersCollection.findOne(findUserFilter, { projection: { deposit: 1 } })) as unknown as User;
     const userTotalBalance = calculateTotalBalance(userDocument.deposit);

@@ -26,7 +26,7 @@ const verifySeller = async (request: Request, response: Response, next: NextFunc
       return;
     }
 
-    if (request.user_id !== product.seller_id.toString()) {
+    if (request.user._id !== product.seller_id.toString()) {
       response.sendStatus(403);
       return;
     }

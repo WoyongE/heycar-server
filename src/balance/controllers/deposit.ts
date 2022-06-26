@@ -23,7 +23,7 @@ const deposit = async (request: Request, response: Response): Promise<void> => {
       return;
     }
 
-    const id = request.user_id;
+    const id = request.user._id;
     const query = { _id: getObjectId(id) };
     const transformedIncQuery = Object.keys(request.body).reduce(
       (previousValue, currentValue) => ({

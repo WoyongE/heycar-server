@@ -4,7 +4,7 @@ import { getObjectId } from '../../utils';
 
 const deleteUser = async (request: Request, response: Response): Promise<void> => {
   try {
-    const id = request.user_id;
+    const id = request.user._id;
     await usersCollection.deleteOne({ _id: getObjectId(id) });
 
     response.status(204).send('User deleted');

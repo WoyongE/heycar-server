@@ -3,7 +3,7 @@ import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import { passwordValidationSchema, usernameValidationSchema } from '../constants';
 import { usersCollection } from '../../mongo/collections';
-import { User } from '../../types';
+import { JWTPayload, LoginResponse, User } from '../../types';
 import { generateTokens } from '../functions';
 
 const logIn = async (request: Request, response: Response): Promise<void> => {
@@ -35,22 +35,25 @@ const logIn = async (request: Request, response: Response): Promise<void> => {
       return;
     }
 
-    const jwtPayload = {
+    const jwtPayload: JWTPayload = {
       username: userDocument.username,
       _id: userDocument._id,
     };
 
     const { access_token, refresh_token } = await generateTokens(jwtPayload);
-    const responseObject = {
+    const responseObject: LoginResponse = {
       user: {
         role: userDocument.role,
         username: userDocument.username,
-        deposit: userDocument.deposit,
       },
       access_token,
       refresh_token,
-      number_of_other_sessions: userDocument.tokens.length - 1 || 1,
+      other_sessions: userDocument.tokens.length - 1 || 1,
     };
+
+    if (request.isBuyer) {
+      responseObject.user.deposit = userDocument.deposit;
+    }
 
     response.json(responseObject);
   } catch (e) {
