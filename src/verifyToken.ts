@@ -40,7 +40,10 @@ const verifyToken = async (request: Request, response: Response, next: NextFunct
       request.token = token;
       request.isBuyer = user.role === Role.BUYER;
       request.isSeller = user.role === Role.SELLER;
-      request.user = user;
+      request.user = {
+        ...user,
+        _id: user._id.toString(),
+      };
 
       next();
     } catch (e) {

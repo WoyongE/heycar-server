@@ -3,7 +3,7 @@ import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import { usersCollection } from '../../mongo/collections';
 import { passwordValidationSchema, usernameValidationSchema } from '../constants';
-import { JWTPayload, SignupResponse, User } from '../../types';
+import { JWTPayload, Role, SignupResponse, User } from '../../types';
 import { generateTokens } from '../functions';
 import { defaultDeposit } from '../../constants';
 
@@ -30,6 +30,7 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
       return;
     }
 
+    const isBuyer = role === Role.BUYER;
     const hashedPassword = await bcrypt.hash(password, 10);
     const document: Record<any, any> = {
       username,
@@ -37,14 +38,14 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
       role,
     };
 
-    if (request.isBuyer) {
+    if (isBuyer) {
       document.deposit = defaultDeposit;
     }
 
     const documentInsertOneResult = await usersCollection.insertOne(document);
-    const documentId = documentInsertOneResult.insertedId;
+    const documentId = documentInsertOneResult.insertedId.toString();
     const jwtPayload: JWTPayload = {
-      _id: documentId.toString(),
+      _id: documentId,
     };
 
     const { access_token, refresh_token } = await generateTokens(jwtPayload);
@@ -52,11 +53,15 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
       user: {
         username,
         role: document.role,
-        _id: documentId.toString(),
+        _id: documentId,
       },
       access_token,
       refresh_token,
     };
+
+    if (isBuyer) {
+      responseObject.user.deposit = document.deposit;
+    }
 
     response.json(responseObject);
   } catch (e) {
