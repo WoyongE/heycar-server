@@ -16,9 +16,15 @@ const verifyToken = async (request: Request, response: Response, next: NextFunct
     }
 
     try {
-      const payload = (await jwt.verify(token, accessTokenSecret)) as JWTPayload;
+      const payload = jwt.verify(token, accessTokenSecret) as JWTPayload;
       const userId = payload._id;
       const user = (await usersCollection.findOne({ $and: [{ _id: getObjectId(userId) }] })) as unknown as User;
+
+      if (!user) {
+        response.sendStatus(404);
+        return;
+      }
+
       const { tokens } = user;
 
       if (!tokens.find(value => value.access === token)) {

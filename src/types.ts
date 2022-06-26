@@ -52,7 +52,11 @@ export type SignupResponse = {
   refresh_token: string;
 };
 
+export type UserResponse = {
+  user: Partial<User>;
+  other_sessions: number;
+};
+
 export type JWTPayload = {
-  username: string;
   _id: string;
 };

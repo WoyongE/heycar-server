@@ -44,7 +44,6 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
     const documentInsertOneResult = await usersCollection.insertOne(document);
     const documentId = documentInsertOneResult.insertedId;
     const jwtPayload: JWTPayload = {
-      username,
       _id: documentId.toString(),
     };
 

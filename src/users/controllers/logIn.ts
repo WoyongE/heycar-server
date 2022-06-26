@@ -36,19 +36,20 @@ const logIn = async (request: Request, response: Response): Promise<void> => {
     }
 
     const jwtPayload: JWTPayload = {
-      username: userDocument.username,
       _id: userDocument._id,
     };
 
     const { access_token, refresh_token } = await generateTokens(jwtPayload);
     const responseObject: LoginResponse = {
       user: {
+        _id: userDocument._id,
         role: userDocument.role,
+        deposit: userDocument.deposit,
         username: userDocument.username,
       },
       access_token,
       refresh_token,
-      other_sessions: userDocument.tokens.length - 1 || 1,
+      other_sessions: Math.max(userDocument.tokens.length - 1, 0),
     };
 
     if (request.isBuyer) {
