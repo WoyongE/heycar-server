@@ -1,9 +1,9 @@
 import chai, { expect } from 'chai';
-import { basePath } from '../src/constants';
-import { Product, Role } from '../src/types';
-import { insertProduct } from '../src/products/service';
-import { database } from '../src/mongo/constants';
-import { User } from '../@types/express';
+import { basePath } from '../constants';
+import { Product, Role } from '../types';
+import { insertProduct } from '../products/service';
+import { database } from '../mongo/constants';
+import { User } from '../../@types/express';
 
 describe('Product', () => {
   let token: string;

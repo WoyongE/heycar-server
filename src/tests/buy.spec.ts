@@ -1,10 +1,10 @@
-import '../src/config';
+import '../config';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { Deposit, Product, Role } from '../src/types';
-import { basePath } from '../src/constants';
-import { database } from '../src/mongo/constants';
-import { User } from '../@types/express';
+import { Deposit, Product, Role } from '../types';
+import { basePath } from '../constants';
+import { database } from '../mongo/constants';
+import { User } from '../../@types/express';
 
 chai.use(chaiHttp);
 
