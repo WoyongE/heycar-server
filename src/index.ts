@@ -12,7 +12,7 @@ import verifyRole from './verifyRole';
 import { Role } from './types';
 import buyProduct from './buyer/controllers/buyProduct';
 import { usersCollection } from './mongo/collections';
-import { databaseName } from './mongo/constants';
+import { database, databaseName, usersCollectionName } from './mongo/constants';
 
 const app = express();
 const morganFormat = isDev ? 'dev' : 'combined';
@@ -30,9 +30,12 @@ mongoClient.connect(() => {
   app.listen(port, () => {
     console.log(usersCollection);
     console.log(databaseName);
-    usersCollection.findOne({}).then(value => {
-      console.log(value);
-    });
+    database
+      .collection(usersCollectionName)
+      .findOne({})
+      .then(value => {
+        console.log(value);
+      });
     console.log(`Server running on port ${basePath}`);
   });
 });
