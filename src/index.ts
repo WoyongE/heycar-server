@@ -11,6 +11,8 @@ import verifyToken from './verifyToken';
 import verifyRole from './verifyRole';
 import { Role } from './types';
 import buyProduct from './buyer/controllers/buyProduct';
+import { usersCollection } from './mongo/collections';
+import { databaseName } from './mongo/constants';
 
 const app = express();
 const morganFormat = isDev ? 'dev' : 'combined';
@@ -26,6 +28,11 @@ app.use('/buy', verifyToken, verifyRole(Role.BUYER), buyProduct);
 
 mongoClient.connect(() => {
   app.listen(port, () => {
+    console.log(usersCollection);
+    console.log(databaseName);
+    usersCollection.findOne({}).then(value => {
+      console.log(value);
+    });
     console.log(`Server running on port ${basePath}`);
   });
 });
