@@ -46,6 +46,12 @@ export type LoginResponse = {
   other_sessions: number;
 };
 
+export type SignupResponse = {
+  user: Partial<User>;
+  access_token: string;
+  refresh_token: string;
+};
+
 export type JWTPayload = {
   username: string;
   _id: string;

@@ -3,7 +3,7 @@ import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import { usersCollection } from '../../mongo/collections';
 import { passwordValidationSchema, usernameValidationSchema } from '../constants';
-import { JWTPayload } from '../../types';
+import { JWTPayload, SignupResponse, User } from '../../types';
 import { generateTokens } from '../functions';
 import { defaultDeposit } from '../../constants';
 
@@ -23,7 +23,7 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
     }
 
     const { username, password, role } = request.body;
-    const userDocument = await usersCollection.findOne({ username });
+    const userDocument = (await usersCollection.findOne({ username })) as User | null;
 
     if (userDocument) {
       response.status(409).send('User already exists');
@@ -49,10 +49,11 @@ const signUp = async (request: Request, response: Response): Promise<void> => {
     };
 
     const { access_token, refresh_token } = await generateTokens(jwtPayload);
-    const responseObject = {
+    const responseObject: SignupResponse = {
       user: {
         username,
-        _id: documentId,
+        role: document.role,
+        _id: documentId.toString(),
       },
       access_token,
       refresh_token,
