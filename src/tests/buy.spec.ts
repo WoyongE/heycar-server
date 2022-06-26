@@ -3,8 +3,8 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import { Deposit, Product, Role } from '../types';
 import { basePath } from '../constants';
-import { database } from '../mongo/constants';
 import { User } from '../../@types/express';
+import { database } from '../mongo/mongo';
 
 chai.use(chaiHttp);
 

@@ -1,9 +1,9 @@
 import chai, { expect } from 'chai';
-import { database } from '../mongo/constants';
 import { User } from '../../@types/express';
 import { Deposit, Role } from '../types';
 import { basePath } from '../constants';
 import { calculateTotalBalance } from '../balance/functions';
+import { database } from '../mongo/mongo';
 
 describe('Deposit', () => {
   let token: string;

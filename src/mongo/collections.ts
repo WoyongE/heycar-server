@@ -1,4 +1,4 @@
-import { database, ordersCollectionName, productsCollectionName, usersCollectionName } from './constants';
+import { database, ordersCollectionName, productsCollectionName, usersCollectionName } from './mongo';
 
 const usersCollection = database.collection(usersCollectionName);
 const productsCollection = database.collection(productsCollectionName);

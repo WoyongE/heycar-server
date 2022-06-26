@@ -3,7 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import usersRouter from './users/router';
-import { mongoClient } from './mongo/mongo';
+import { database, databaseName, getCollection, mongoClient, usersCollectionName } from './mongo/mongo';
 import { basePath, isDev, port } from './constants';
 import productsRouter from './products/router';
 import balanceRouter from './balance/router';
@@ -12,7 +12,6 @@ import verifyRole from './verifyRole';
 import { Role } from './types';
 import buyProduct from './buyer/controllers/buyProduct';
 import { usersCollection } from './mongo/collections';
-import { database, databaseName, usersCollectionName } from './mongo/constants';
 
 const app = express();
 const morganFormat = isDev ? 'dev' : 'combined';
@@ -28,10 +27,9 @@ app.use('/buy', verifyToken, verifyRole(Role.BUYER), buyProduct);
 
 mongoClient.connect(() => {
   app.listen(port, () => {
-    console.log(usersCollection);
+    // console.log(usersCollection);
     console.log(databaseName);
-    database
-      .collection(usersCollectionName)
+    getCollection(usersCollectionName)
       .findOne({})
       .then(value => {
         console.log(value);
